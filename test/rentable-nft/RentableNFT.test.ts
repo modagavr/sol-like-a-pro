@@ -40,6 +40,8 @@ describe('Rentable NFT', () => {
     expect(
       await token.connect(lord).transferFrom(lord.address, renter.address, 0)
     )
+      .to.emit(token, 'Transfer')
+      .withArgs(lord.address, renter.address, 0)
 
     expect(await token.totalSupply())
       .to.eql(await token.balanceOf(renter.address))
