@@ -64,7 +64,7 @@ describe('Rentable NFT', () => {
 
       await expect(
         token.rentOut(renter.address, 1, expiresAt)
-      ).to.be.revertedWith('ERC721: transfer of token that is not own')
+      ).to.be.revertedWith('ERC721: transfer from incorrect owner')
 
       await expect(token.connect(lord).rentOut(renter.address, 1, expiresAt))
         .to.emit(token, 'Rented')
