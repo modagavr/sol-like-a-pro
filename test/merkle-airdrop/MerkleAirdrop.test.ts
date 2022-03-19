@@ -42,6 +42,8 @@ describe('Merkle Airdrop', () => {
 
     expect(await airdrop.canClaim(signer.address, proof)).to.eq(true)
 
+    Object.assign(airdrop, { getAddress: () => airdrop.address })
+
     await expect(() => airdrop.claim(proof)).to.changeTokenBalances(
       token,
       [airdrop, signer],
