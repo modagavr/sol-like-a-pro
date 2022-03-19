@@ -27,3 +27,9 @@ Rentable NFTs are the next big trend. Rent out an expensive NFT for one day and 
 Use Merkle tree to airdrop your token in a cheap, elegant and efficient way. 
 
 ![MerkleTreeAirdrop](thumbnails/merkle-tree-airdrop.png)
+
+4. [Digital Signatures](https://youtu.be/w9St9aU9UqQ)
+
+Elliptic Curve Digital Signature Algorithm is a popular method of digital identification.
+
+![Digital Signatures](thumbnails/ecdsa.png)
