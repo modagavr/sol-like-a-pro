@@ -33,3 +33,9 @@ Use Merkle tree to airdrop your token in a cheap, elegant and efficient way.
 Elliptic Curve Digital Signature Algorithm is a popular method of digital identification.
 
 ![Digital Signatures](thumbnails/ecdsa.png)
+
+6. [Upgradeable Smart Contracts](https://youtu.be/3XXw-cIWgV4)
+
+Upgrade your Smart Contracts using Transparent Upgradeable Proxy.
+
+![Upgradeable Smart Contracts](thumbnails/proxy.png)
