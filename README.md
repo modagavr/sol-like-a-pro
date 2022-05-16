@@ -39,3 +39,9 @@ Elliptic Curve Digital Signature Algorithm is a popular method of digital identi
 Upgrade your Smart Contracts using Transparent Upgradeable Proxy.
 
 ![Upgradeable Smart Contracts](thumbnails/proxy.png)
+
+7. [10 Hardhat Best Practices](https://youtu.be/hMmDCczYBs4)
+
+Hardhat is an Ethereum Development Environment for Professionals. We will take a look at 10 Hardhat Best Practices.
+
+![10 Hardhat Best Practices](thumbnails/hardhat-best-practices.png)
