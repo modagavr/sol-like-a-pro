@@ -29,13 +29,13 @@ describe('Rentable NFT', () => {
   })
 
   it('Mint & Transfer', async () => {
-    expect(await token.totalSupply()).to.eql(constants.Zero)
+    expect((await token.totalSupply())._hex).to.eql(constants.Zero._hex)
 
     await token.safeMint(lord.address)
 
-    expect(await token.totalSupply())
-      .to.eql(await token.balanceOf(lord.address))
-      .to.eql(constants.One)
+    expect((await token.totalSupply())._hex)
+      .to.eql((await token.balanceOf(lord.address))._hex)
+      .to.eql(constants.One._hex)
 
     expect(
       await token.connect(lord).transferFrom(lord.address, renter.address, 0)
@@ -43,11 +43,13 @@ describe('Rentable NFT', () => {
       .to.emit(token, 'Transfer')
       .withArgs(lord.address, renter.address, 0)
 
-    expect(await token.totalSupply())
-      .to.eql(await token.balanceOf(renter.address))
-      .to.eql(constants.One)
+    expect((await token.totalSupply())._hex)
+      .to.eql((await token.balanceOf(renter.address))._hex)
+      .to.eql(constants.One._hex)
 
-    expect(await token.balanceOf(lord.address)).to.eql(constants.Zero)
+    expect((await token.balanceOf(lord.address))._hex).to.eql(
+      constants.Zero._hex
+    )
   })
 
   describe('Rent Out & Finish Renting', () => {
@@ -58,9 +60,9 @@ describe('Rentable NFT', () => {
       await token.safeMint(lord.address)
       await token.safeMint(lord.address)
 
-      expect(await token.totalSupply())
-        .to.eql(await token.balanceOf(lord.address))
-        .to.eql(BigNumber.from(3))
+      expect((await token.totalSupply())._hex)
+        .to.eql((await token.balanceOf(lord.address))._hex)
+        .to.eql(BigNumber.from(3)._hex)
 
       await expect(
         token.rentOut(renter.address, 1, expiresAt)
@@ -72,15 +74,15 @@ describe('Rentable NFT', () => {
 
       expect(
         await Promise.all([
-          token.totalSupply(),
-          token.balanceOf(lord.address),
-          token.balanceOf(renter.address),
+          (await token.totalSupply())._hex,
+          (await token.balanceOf(lord.address))._hex,
+          (await token.balanceOf(renter.address))._hex,
           token.ownerOf(1)
         ])
       ).to.eql([
-        BigNumber.from(3),
-        constants.Two,
-        constants.One,
+        BigNumber.from(3)._hex,
+        constants.Two._hex,
+        constants.One._hex,
         renter.address
       ])
 
@@ -90,8 +92,13 @@ describe('Rentable NFT', () => {
         rental.isActive,
         rental.lord,
         rental.renter,
-        rental.expiresAt
-      ]).to.eql([true, lord.address, renter.address, BigNumber.from(expiresAt)])
+        rental.expiresAt._hex
+      ]).to.eql([
+        true,
+        lord.address,
+        renter.address,
+        BigNumber.from(expiresAt)._hex
+      ])
 
       await expect(
         token.connect(renter).transferFrom(renter.address, guy.address, 1)
@@ -119,15 +126,15 @@ describe('Rentable NFT', () => {
     afterEach(async () => {
       expect(
         await Promise.all([
-          token.totalSupply(),
-          token.balanceOf(lord.address),
-          token.balanceOf(renter.address),
+          (await token.totalSupply())._hex,
+          (await token.balanceOf(lord.address))._hex,
+          (await token.balanceOf(renter.address))._hex,
           token.ownerOf(1)
         ])
       ).to.eql([
-        BigNumber.from(3),
-        BigNumber.from(3),
-        constants.Zero,
+        BigNumber.from(3)._hex,
+        BigNumber.from(3)._hex,
+        constants.Zero._hex,
         lord.address
       ])
 
@@ -137,12 +144,12 @@ describe('Rentable NFT', () => {
         rental.isActive,
         rental.lord,
         rental.renter,
-        rental.expiresAt
+        rental.expiresAt._hex
       ]).to.eql([
         false,
         lord.address,
         renter.address,
-        BigNumber.from(expiresAt)
+        BigNumber.from(expiresAt)._hex
       ])
     })
   })
