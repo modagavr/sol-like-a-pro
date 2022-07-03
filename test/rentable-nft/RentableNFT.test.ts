@@ -103,13 +103,13 @@ describe('Rentable NFT', () => {
       await expect(
         token.connect(renter).transferFrom(renter.address, guy.address, 1)
       ).to.be.revertedWith('RentableNFT: this token is rented')
-
-      await expect(token.finishRenting(1)).to.be.revertedWith(
-        'RentableNFT: this token is rented'
-      )
     })
 
     it('Early Finish', async () => {
+      await expect(token.finishRenting(1)).to.be.revertedWith(
+        'RentableNFT: this token is rented'
+      )
+
       await expect(token.connect(renter).finishRenting(1))
         .to.emit(token, 'FinishedRent')
         .withArgs(1, lord.address, renter.address, expiresAt)
@@ -121,6 +121,19 @@ describe('Rentable NFT', () => {
       await expect(token.connect(guy).finishRenting(1))
         .to.emit(token, 'FinishedRent')
         .withArgs(1, lord.address, renter.address, expiresAt)
+    })
+
+    it('Revert abuse finishRenting to return transfered token', async () => {
+      await network.provider.send('evm_setNextBlockTimestamp', [expiresAt * 10])
+      await token.connect(guy).finishRenting(1)
+
+      await token.connect(lord).transferFrom(lord.address, renter.address, 1)
+
+      await expect(token.connect(guy).finishRenting(1)).to.be.revertedWith(
+        'RentableNFT: this token is not rented'
+      )
+
+      await token.connect(renter).transferFrom(renter.address, lord.address, 1)
     })
 
     afterEach(async () => {
@@ -147,9 +160,9 @@ describe('Rentable NFT', () => {
         rental.expiresAt._hex
       ]).to.eql([
         false,
-        lord.address,
-        renter.address,
-        BigNumber.from(expiresAt)._hex
+        constants.AddressZero,
+        constants.AddressZero,
+        BigNumber.from(0)._hex
       ])
     })
   })
