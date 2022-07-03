@@ -60,15 +60,16 @@ contract RentableNFT is ERC721, ERC721Enumerable, Ownable {
     }
 
     function finishRenting(uint256 tokenId) external {
-        Rental storage _rental = rental[tokenId];
+        Rental memory _rental = rental[tokenId];
 
+        require(_rental.isActive, "RentableNFT: this token is not rented");
         require(
             msg.sender == _rental.renter ||
                 block.timestamp >= _rental.expiresAt,
             "RentableNFT: this token is rented"
         );
 
-        _rental.isActive = false;
+        delete rental[tokenId];
 
         _transfer(_rental.renter, _rental.lord, tokenId);
 
