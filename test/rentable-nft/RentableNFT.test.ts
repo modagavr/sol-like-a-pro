@@ -29,13 +29,13 @@ describe('Rentable NFT', () => {
   })
 
   it('Mint & Transfer', async () => {
-    expect((await token.totalSupply())._hex).to.eql(constants.Zero._hex)
+    expect(await token.totalSupply()).to.eql(constants.Zero)
 
     await token.safeMint(lord.address)
 
-    expect((await token.totalSupply())._hex)
-      .to.eql((await token.balanceOf(lord.address))._hex)
-      .to.eql(constants.One._hex)
+    expect(await token.totalSupply())
+      .to.eql(await token.balanceOf(lord.address))
+      .to.eql(constants.One)
 
     expect(
       await token.connect(lord).transferFrom(lord.address, renter.address, 0)
@@ -43,13 +43,11 @@ describe('Rentable NFT', () => {
       .to.emit(token, 'Transfer')
       .withArgs(lord.address, renter.address, 0)
 
-    expect((await token.totalSupply())._hex)
-      .to.eql((await token.balanceOf(renter.address))._hex)
-      .to.eql(constants.One._hex)
+    expect(await token.totalSupply())
+      .to.eql(await token.balanceOf(renter.address))
+      .to.eql(constants.One)
 
-    expect((await token.balanceOf(lord.address))._hex).to.eql(
-      constants.Zero._hex
-    )
+    expect(await token.balanceOf(lord.address)).to.eql(constants.Zero)
   })
 
   describe('Rent Out & Finish Renting', () => {
@@ -60,9 +58,9 @@ describe('Rentable NFT', () => {
       await token.safeMint(lord.address)
       await token.safeMint(lord.address)
 
-      expect((await token.totalSupply())._hex)
-        .to.eql((await token.balanceOf(lord.address))._hex)
-        .to.eql(BigNumber.from(3)._hex)
+      expect(await token.totalSupply())
+        .to.eql(await token.balanceOf(lord.address))
+        .to.eql(BigNumber.from(3))
 
       await expect(
         token.rentOut(renter.address, 1, expiresAt)
@@ -74,15 +72,15 @@ describe('Rentable NFT', () => {
 
       expect(
         await Promise.all([
-          (await token.totalSupply())._hex,
-          (await token.balanceOf(lord.address))._hex,
-          (await token.balanceOf(renter.address))._hex,
+          await token.totalSupply(),
+          await token.balanceOf(lord.address),
+          await token.balanceOf(renter.address),
           token.ownerOf(1)
         ])
       ).to.eql([
-        BigNumber.from(3)._hex,
-        constants.Two._hex,
-        constants.One._hex,
+        BigNumber.from(3),
+        constants.Two,
+        constants.One,
         renter.address
       ])
 
@@ -92,20 +90,15 @@ describe('Rentable NFT', () => {
         rental.isActive,
         rental.lord,
         rental.renter,
-        rental.expiresAt._hex
-      ]).to.eql([
-        true,
-        lord.address,
-        renter.address,
-        BigNumber.from(expiresAt)._hex
-      ])
+        rental.expiresAt
+      ]).to.eql([true, lord.address, renter.address, BigNumber.from(expiresAt)])
 
       await expect(
         token.connect(renter).transferFrom(renter.address, guy.address, 1)
-      ).to.be.revertedWith('RentableNFT: this token is rented')
+      ).to.be.revertedWith(`RentableNFT: this token is rented`)
 
       await expect(token.finishRenting(1)).to.be.revertedWith(
-        'RentableNFT: this token is rented'
+        `RentableNFT: this rental can't be finished`
       )
     })
 
@@ -126,15 +119,15 @@ describe('Rentable NFT', () => {
     afterEach(async () => {
       expect(
         await Promise.all([
-          (await token.totalSupply())._hex,
-          (await token.balanceOf(lord.address))._hex,
-          (await token.balanceOf(renter.address))._hex,
+          await token.totalSupply(),
+          await token.balanceOf(lord.address),
+          await token.balanceOf(renter.address),
           token.ownerOf(1)
         ])
       ).to.eql([
-        BigNumber.from(3)._hex,
-        BigNumber.from(3)._hex,
-        constants.Zero._hex,
+        BigNumber.from(3),
+        BigNumber.from(3),
+        constants.Zero,
         lord.address
       ])
 
@@ -144,12 +137,12 @@ describe('Rentable NFT', () => {
         rental.isActive,
         rental.lord,
         rental.renter,
-        rental.expiresAt._hex
+        rental.expiresAt
       ]).to.eql([
         false,
-        lord.address,
-        renter.address,
-        BigNumber.from(expiresAt)._hex
+        constants.AddressZero,
+        constants.AddressZero,
+        BigNumber.from(0)
       ])
     })
   })

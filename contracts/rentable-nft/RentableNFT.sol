@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.12;
+pragma solidity 0.8.15;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
@@ -60,15 +60,16 @@ contract RentableNFT is ERC721, ERC721Enumerable, Ownable {
     }
 
     function finishRenting(uint256 tokenId) external {
-        Rental storage _rental = rental[tokenId];
+        Rental memory _rental = rental[tokenId];
 
         require(
-            msg.sender == _rental.renter ||
-                block.timestamp >= _rental.expiresAt,
-            "RentableNFT: this token is rented"
+            _rental.isActive &&
+                (msg.sender == _rental.renter ||
+                    block.timestamp >= _rental.expiresAt),
+            "RentableNFT: this rental can't be finished"
         );
 
-        _rental.isActive = false;
+        delete rental[tokenId];
 
         _transfer(_rental.renter, _rental.lord, tokenId);
 

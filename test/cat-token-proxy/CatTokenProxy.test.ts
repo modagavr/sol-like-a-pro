@@ -19,9 +19,7 @@ describe('Cat Token Proxy', () => {
 
     await legacyCatToken.deployed()
 
-    expect((await legacyCatToken.totalSupply())._hex).to.eql(
-      constants.Zero._hex
-    )
+    expect(await legacyCatToken.totalSupply()).to.eql(constants.Zero)
 
     const ModernCatTokenFactory = await ethers.getContractFactory(
       'ModernCatToken'
@@ -34,14 +32,12 @@ describe('Cat Token Proxy', () => {
 
     expect(modernCatToken.address).to.eq(legacyCatToken.address)
 
-    expect((await modernCatToken.totalSupply())._hex).to.eql(
-      constants.Zero._hex
-    )
+    expect(await modernCatToken.totalSupply()).to.eql(constants.Zero)
 
     await modernCatToken.mint(signer.address, parseEther('1'))
 
-    expect((await modernCatToken.totalSupply())._hex)
-      .to.eql((await modernCatToken.balanceOf(signer.address))._hex)
-      .to.eql(parseEther('1')._hex)
+    expect(await modernCatToken.totalSupply())
+      .to.eql(await modernCatToken.balanceOf(signer.address))
+      .to.eql(parseEther('1'))
   })
 })
